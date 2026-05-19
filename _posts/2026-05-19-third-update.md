@@ -8,4 +8,4 @@ Ambient light, point light and specular light are added.
 
 After reconsidering the project goal and feedbacks from Christopher, I decide to focus on rendering techniques instead of boids algorithm.
 
-<img width="572" height="539" alt="Screenshot 2026-05-19 at 3 24 25 PM" src="https://github.com/user-attachments/assets/d6a5b52d-7724-4876-b460-97fbebcd1491" />
+<img width="547" height="662" alt="Screenshot 2026-05-19 at 3 26 17 PM" src="https://github.com/user-attachments/assets/cf4686ac-9b09-4b9b-b4e2-089c9df49031" />
