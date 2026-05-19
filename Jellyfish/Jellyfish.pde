@@ -13,8 +13,8 @@ void setup(){
     
     for(int idx = 0; idx < tentacleCount; idx++){
       tentacleOffset[idx] = random(0, 100);  
-      tentacleWidth[idx] = random(5, 20);
-      tentacleLength[idx] = random(250, 300);
+      tentacleWidth[idx] = random(15, 40);
+      tentacleLength[idx] = random(250, 400);
     }   
 }
 
@@ -34,7 +34,7 @@ void jellyfish(){
   blendMode(ADD);
   
   rotateX(-0.4);
-  int total = 75;
+  int total = 100;
 
 //draw half sphere and color  
   for (int r = 0; r <= 150; r++){
@@ -60,7 +60,7 @@ void jellyfish(){
   int tentacleIndex = 0; //counting tentacle
   int segments = 10; //split segments of tentacle to make it smoother
 
-  for (int r1 = 0; r1 <=120; r1 = r1+50){
+  for (int r1 = 0; r1 <= total; r1 = r1+50){
     float phi1 = map(i1, 0, total, 0, HALF_PI);
     
       for (int j1 = 0; j1 <= total; j1 = j1+50){
@@ -69,9 +69,6 @@ void jellyfish(){
         float x1 = r1 * bellScale * sin(phi1) * cos(theta1);
         float y1 = -r1 * cos(phi1);
         float z1 = r1 * bellScale * sin(phi1) * sin(theta1);    
-        
-        //float noiseValue = noise(tentacleOffset[tentacleIndex] + t * 0.5);
-        //float sway = map(noiseValue, 0, 1, -25, 25); //both to left and to right 
         
         float px = x1, py = y1, pz = z1;
         for (int s = 1; s <= segments; s++){
