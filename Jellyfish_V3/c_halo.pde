@@ -1,12 +1,12 @@
 void drawHalo(float bellScale) {
   int totalPhi = 40; //latitude
   int totalTheta = 80; //longtitude
-  float radius = 150;
+  float radius = 50;
 
-  float haloExpand = map(bellScale, 0.88, 1.12, 30, 40);
+  float haloExpand = map(bellScale, 0.88, 1.12, 5, 20);
   float haloRadius = radius + haloExpand;
 
-  float haloMaxAlpha = map(haloRadius, 180, 190, 80, 20);
+  float haloMaxAlpha = map(haloRadius, 55, 70, 80, 20);
 
   for (int haloLayer = 0; haloLayer < 4; haloLayer++) {
     float haloLayerRadius = haloRadius + haloLayer * 2;

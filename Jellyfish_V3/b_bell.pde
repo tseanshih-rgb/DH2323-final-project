@@ -3,13 +3,12 @@ void drawBell(float bellScale) {
   int totalPhi = 40;
   int totalTheta = 80;
   
-  float radius = 150;
+  float radius = 50;
 
   float maxAlpha = map(bellScale, 0.88, 1.12, 100, 50);
 
   noStroke();
 
-  //bell
   for (int layer = 0; layer < 6; layer++) {
     float layerRadius = radius + layer * 3;
     for (int i = 0; i < totalPhi; i++) {
