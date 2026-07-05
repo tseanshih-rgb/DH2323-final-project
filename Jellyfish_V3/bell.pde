@@ -59,7 +59,7 @@ void drawBell(float bellScale) {
         float ratioTopBell = (float) i / totalPhi;
         float ratioBotBell = (float) (i+1) / totalPhi;
         float alphaTopBell = maxAlpha * pow(1.0 - ratioTopBell * 0.9, map(fresnel0, 0.02, 1, 2, 0));
-        float alphaBotBell = maxAlpha * pow(1.0 - ratioBotBell * 0.9, map(fresnel0, 0.02, 1, 2, 0));
+        float alphaBotBell = maxAlpha * pow(1.0 - ratioBotBell * 0.9, map(fresnel1, 0.02, 1, 2, 0));
 
         fill(map(fresnel0, 0, 1, 150, 180) + sss0 * 180, map(fresnel0, 0, 1, 100, 180) + sss0 * 200, 200, alphaTopBell);
         normal(nx0, ny0, nz0);
