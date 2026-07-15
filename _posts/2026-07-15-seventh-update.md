@@ -15,13 +15,13 @@ Changes:
      dc is only positive while contraction is actively increasing (squeezing in). Once it starts relaxing, dc goes negative and gets clamped to 0 by max(dc, 0). So thrust naturally appears only during the squeeze
    3.2. two different smoothing speeds
 
-     ˋˋˋjava
+     ```java
        if (thrustRaw > thrustSmooth) {
       thrustSmooth += (thrustRaw - thrustSmooth) * 0.5;  // catches up fast
       } else {
       thrustSmooth += (thrustRaw - thrustSmooth) * 0.06; // releases slowly
       }
-     ˋˋˋ
+     ```
      When thrust is rising, it follows quickly, and when thrust is falling, it eases down slowly.
 4. The look of the bell: draw the bell in a flatter shape
   
