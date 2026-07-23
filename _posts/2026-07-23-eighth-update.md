@@ -12,21 +12,19 @@ Changes:
     scareTime = t;
   }
 ```
+
 ```java
   void flee() {
   float age = t - scareTime; //how long since the last time scared
   if (age > 5.0) return; 
-    
   float dx = x - scareX;
   float dy = y - scareY;
   float d = sqrt(sq(dx) + sq(dy));
-  
   float radius = 300;
   if (d > 0 && d < radius){
     float spatialFalloff = 1.0 - d / radius; //the closer the jellyfish is to the mouse, the harder it is pushed away
     float timeFalloff = 1.0 - age / 3.0; //the push decrease along with time
     float strength = 0.3 * spatialFalloff * timeFalloff;
-    
     ax += (dx / d) * maxSpeed * strength;
     ay += (dy / d) * maxSpeed * strength;
   }
@@ -63,10 +61,10 @@ Changes:
 ```
 However, after updating this feature, I realized this feature was conflict with seekMouse(). Even jellyfishes follow currents, they soon swim back toward the mouse. They were both my babies, I really didn't want to delete any of them. So, I sought some helps from Claude, to see if there was any way to keep both.
 Clause provided four approaches:
-  - Approach 1_Make heading account for the current too, not just swim velocity (RECOMMEND): "Right now heading is computed as atan2(vy, vx) — purely from the jellyfish's own swim velocity,     ignoring currentVX, currentVY entirely. Change it to compute heading from the combined direction (swim velocity + current) instead. That way, when the current is strong, the body actually turns to face the direction it's really drifting in, instead of staying locked onto the mouse. Visually, this becomes 'when the current is strong enough, the whole school turns and faces the direction of the flow as it gets swept along' — which is the read you actually want."
-  - Approach 2_Give seekMouse a distance falloff and a perception radius (same design as flee) (RECOMMEND): "Right now seekMouse pulls with the same strength regardless of distance — no falloff at all. This is actually inconsistent with every other force you have (separate/align/cohesion/flee all have a defined radius); seekMouse is the one outlier with unlimited global range. Add a radius, and only jellyfish near the cursor get pulled toward it — jellyfish far from the cursor (the ones currently being swept by the current) are left alone. The two effects naturally separate in space, and you don't have to sacrifice either feature."
-  - Approach 3_Change the trigger from "mouse has moved" to "mouse is actively being dragged"
-  - Approach 4_Automatically suppress seekMouse's weight once the current is strong enough  
+  - Make heading account for the current too, not just swim velocity (RECOMMEND): "Right now heading is computed as atan2(vy, vx) — purely from the jellyfish's own swim velocity,     ignoring currentVX, currentVY entirely. Change it to compute heading from the combined direction (swim velocity + current) instead. That way, when the current is strong, the body actually turns to face the direction it's really drifting in, instead of staying locked onto the mouse. Visually, this becomes 'when the current is strong enough, the whole school turns and faces the direction of the flow as it gets swept along' — which is the read you actually want."
+  - Give seekMouse a distance falloff and a perception radius (same design as flee) (RECOMMEND): "Right now seekMouse pulls with the same strength regardless of distance — no falloff at all. This is actually inconsistent with every other force you have (separate/align/cohesion/flee all have a defined radius); seekMouse is the one outlier with unlimited global range. Add a radius, and only jellyfish near the cursor get pulled toward it — jellyfish far from the cursor (the ones currently being swept by the current) are left alone. The two effects naturally separate in space, and you don't have to sacrifice either feature."
+  - Change the trigger from "mouse has moved" to "mouse is actively being dragged"
+  - Automatically suppress seekMouse's weight once the current is strong enough  
 
 I chose approach 1 and 2 as it recommended.
  - added current into heading direction:
