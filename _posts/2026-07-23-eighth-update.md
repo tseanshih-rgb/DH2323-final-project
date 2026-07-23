@@ -79,8 +79,6 @@ I chose approach 1 and 2 as it recommended.
    currentHeading += diff * turnRate * min(dirSpeed / maxSpeed, 1);
 ```
  - added seekRadius inside seekMouse(), so only a few jellyfishes will be summoned by the mouse
-
-
-5. j
+<img width="654" height="715" alt="Screenshot 2026-07-23 at 1 06 25 PM" src="https://github.com/user-attachments/assets/95ba9ce0-f720-4e8b-b09c-b70399a7d63c" />
    
 
