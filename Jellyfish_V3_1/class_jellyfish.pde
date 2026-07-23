@@ -11,6 +11,7 @@ class Jellyfish {
   float currentHeading;
   float turnRate = 0.05;
   float size;
+  float depth;
 
   float phase;
   float period;
@@ -39,7 +40,8 @@ class Jellyfish {
     vx = random(-maxSpeed, maxSpeed);
     vy = random(-maxSpeed, maxSpeed);
     currentHeading = atan2(vy, vx) + HALF_PI;
-    size = random(0.85, 1.15);
+    depth = random(0, 1);
+    size = map(depth, 0, 1, 1.15, 0.7) * random(0.9, 1.1);
     phase = random(1);
     period = random(2.3, 2.9);
 
@@ -69,8 +71,8 @@ class Jellyfish {
     scale(size);
     translate(0, offsetY, 0);
 
-    drawBell(phase);
-    drawHalo(phase);
+    drawBell(phase, depth);
+    drawHalo(phase, depth);
     drawTentacles();
 
     popMatrix();
@@ -84,6 +86,7 @@ class Jellyfish {
     align(jellyfishes);
     cohesion(jellyfishes);
     seekMouse();
+    flee();
 
     float margin = 150;
     if (x < margin)          ax += 0.06;
@@ -119,8 +122,9 @@ class Jellyfish {
     } else {
       thrustSmooth += (thrustRaw - thrustSmooth) * 0.06;
     }
-    x += vx * (0.4 + thrustSmooth);
-    y += vy * (0.4 + thrustSmooth);
+
+    x += vx * (0.4 + thrustSmooth) + currentVX;
+    y += vy * (0.4 + thrustSmooth) + currentVY;
 
     if (x >= width || x < 0) {
       vx *= -1;
@@ -130,12 +134,17 @@ class Jellyfish {
       vy *= -1;
       y = constrain(y, 0, height);
     }
-
-    float targetHeading = atan2(vy, vx) + HALF_PI;
+    
+    float dirX = vx + currentVX;
+    float dirY = vy + currentVY;
+    float dirSpeed = sqrt(sq(dirX) + sq(dirY));
+    
+    float targetHeading = atan2(dirY, dirX) + HALF_PI;
     float diff = targetHeading - currentHeading;
+
     while (diff > PI)  diff -= TWO_PI;
     while (diff < -PI) diff += TWO_PI;
-    currentHeading += diff * turnRate * min(speed / maxSpeed, 1);
+    currentHeading += diff * turnRate * min(dirSpeed / maxSpeed, 1);
   }
 
   void separate(Jellyfish[] others) {
@@ -210,13 +219,32 @@ class Jellyfish {
 
   void seekMouse() {
     if (!mouseActive) return;
-
+    float seekRadius = 200;
     float dx = mouseX - x;
     float dy = mouseY - y;
     float d = sqrt(sq(dx) + sq(dy));
-    if (d > 0) {
+    if (d > 0 && d < seekRadius) {
       ax += (dx / d * maxSpeed - vx) * 0.02;
       ay += (dy / d * maxSpeed - vy) * 0.02;
+    }
+  }
+
+  void flee() {
+    float age = t - scareTime;
+    if (age > 5.0) return;
+    
+    float dx = x - scareX;
+    float dy = y - scareY;
+    float d = sqrt(sq(dx) + sq(dy));
+    
+    float radius = 300;
+    if (d > 0 && d < radius){
+      float spatialFalloff = 1.0 - d / radius;
+      float timeFalloff = 1.0 - age / 5.0;
+      float strength = 0.3 * spatialFalloff * timeFalloff;
+      
+      ax += (dx / d) * maxSpeed * strength;
+      ay += (dy / d) * maxSpeed * strength;
     }
   }
 

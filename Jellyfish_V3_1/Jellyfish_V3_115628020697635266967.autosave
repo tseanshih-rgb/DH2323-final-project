@@ -10,16 +10,6 @@ final float TUCK = 0.55;
 final float WAVE_DELAY = 0.13;
 final float CONTRACT_FRAC = 1.0 / 3.0;
 
-float currentVX = 0;
-float currentVY = 0;
-
-//water-current compass: a small self-contained UI dial, kept spatially
-//separate from the jellyfish scene so it never fights with flee/seekMouse
-float compassX, compassY;
-float compassRadius = 50;
-float maxCurrentStrength = 1.2;
-boolean draggingCompass = false;
-
 float scareX;
 float scareY;
 float scareTime = -999;
@@ -36,71 +26,18 @@ void mouseMoved() {
 }
 
 void mouseDragged() {
-  if (draggingCompass) {
-    updateCurrentFromCompass();
-  } else {
-    mouseActive = true;
-  }
+  mouseActive = true;
 }
 
-void mousePressed() {
-  if (insideCompass(mouseX, mouseY)) {
-    draggingCompass = true;
-    updateCurrentFromCompass();
-  } else {
-    scareX = mouseX;
-    scareY = mouseY;
-    scareTime = t;
-  }
-}
-
-void mouseReleased() {
-  draggingCompass = false;
-}
-
-boolean insideCompass(float mx, float my) {
-  float d = sqrt(sq(mx - compassX) + sq(my - compassY));
-  return d < compassRadius;
-}
-
-void updateCurrentFromCompass() {
-  float dx = mouseX - compassX;
-  float dy = mouseY - compassY;
-  float d = sqrt(sq(dx) + sq(dy));
-  float clamped = min(d, compassRadius);
-  float angle = atan2(dy, dx);
-  float mag = map(clamped, 0, compassRadius, 0, maxCurrentStrength);
-
-  currentVX = cos(angle) * mag;
-  currentVY = sin(angle) * mag;
-}
-
-void drawCompass() {
-  noFill();
-  stroke(200, 220, 255, 150);
-  strokeWeight(2);
-  ellipse(compassX, compassY, compassRadius * 2, compassRadius * 2);
-
-  float mag = sqrt(sq(currentVX) + sq(currentVY));
-  float angle = atan2(currentVY, currentVX);
-  float handleDist = map(mag, 0, maxCurrentStrength, 0, compassRadius);
-  float hx = compassX + cos(angle) * handleDist;
-  float hy = compassY + sin(angle) * handleDist;
-
-  stroke(255);
-  strokeWeight(3);
-  line(compassX, compassY, hx, hy);
-  noStroke();
-  fill(255);
-  ellipse(hx, hy, 8, 8);
+void mousePressed(){
+  scareX = mouseX;
+  scareY = mouseY;
+  scareTime = t;
 }
 
 void setup() {
   size(1680, 840, P3D);
-
-  compassX = 80;
-  compassY = height - 80;
-
+  
   ocean = createImage(width, height, RGB);
   ocean.loadPixels();
   for (int py = 0; py < height; py++){
@@ -122,14 +59,12 @@ void setup() {
 }
 
 void draw() {
-  background(0); //clears the depth buffer too; color gets fully covered by the image below
-  blendMode(BLEND);
   image(ocean, 0, 0);
   t += 0.018 * 60.0 / frameRate;
 
+  blendMode(BLEND);
   fill(255);
   text(nf(frameRate, 0, 1) + " fps", 20, 30);
-  drawCompass();
 
   blendMode(ADD);
 

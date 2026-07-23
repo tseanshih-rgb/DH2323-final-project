@@ -1,10 +1,11 @@
-void drawHalo(float phase) {
+void drawHalo(float phase, float depth) {
 
   float cGlobal = contractionAt(phase);
   float haloExpand = map(cGlobal, 0, 1, 20, 5);
   float haloRadius = bellRadius + haloExpand;
 
   float haloMaxAlpha = map(haloRadius, 55, 70, 80, 20);
+  haloMaxAlpha *= map(depth, 0, 1, 1.0, 0.35);
 
   for (int haloLayer = 0; haloLayer < 4; haloLayer++) {
     float haloLayerRadius = haloRadius + haloLayer * 2;

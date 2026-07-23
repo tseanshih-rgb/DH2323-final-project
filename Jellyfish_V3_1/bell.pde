@@ -57,10 +57,13 @@ void initBell() {
   }
 }
 
-void drawBell(float phase) {
+void drawBell(float phase, float depth) {
 
   float cGlobal = contractionAt(phase);
   float maxAlpha = map(cGlobal, 0, 1, 75, 150);
+  maxAlpha *= map(depth, 0, 1, 1.0, 0.35);
+  
+  float fog = depth * 0.5;
 
   noStroke();
 
@@ -81,17 +84,18 @@ void drawBell(float phase) {
       beginShape(TRIANGLE_STRIP);
 
       for (int j = 0; j <= totalTheta; j++) {
-        fill(bellR[i][j], bellG[i][j], bellB[i][j], maxAlpha * bellAlphaFactor[i][j]);
+        
+       fill(lerp(bellR[i][j], 0, fog),
+       lerp(bellG[i][j], 0, fog),
+       lerp(bellB[i][j], 20, fog),
+       maxAlpha * bellAlphaFactor[i][j]);
+         
         normal(bellUnitX[i][j], bellUnitY[i], bellUnitZ[i][j]);
-        vertex(layerRadius * sxz0 * bellUnitX[i][j],
-               layerRadius * (bellUnitY[i] + ty0),
-               layerRadius * sxz0 * bellUnitZ[i][j]);
+        vertex(layerRadius * sxz0 * bellUnitX[i][j], layerRadius * (bellUnitY[i] + ty0), layerRadius * sxz0 * bellUnitZ[i][j]);
 
-        fill(bellR[i+1][j], bellG[i+1][j], bellB[i+1][j], maxAlpha * bellAlphaFactor[i+1][j]);
+        fill(lerp(bellR[i+1][j], 0, fog), lerp(bellG[i+1][j], 0, fog), lerp(bellB[i+1][j], 20, fog), maxAlpha * bellAlphaFactor[i+1][j]);
         normal(bellUnitX[i+1][j], bellUnitY[i+1], bellUnitZ[i+1][j]);
-        vertex(layerRadius * sxz1 * bellUnitX[i+1][j],
-               layerRadius * (bellUnitY[i+1] + ty1),
-               layerRadius * sxz1 * bellUnitZ[i+1][j]);
+        vertex(layerRadius * sxz1 * bellUnitX[i+1][j], layerRadius * (bellUnitY[i+1] + ty1), layerRadius * sxz1 * bellUnitZ[i+1][j]);
       }
       endShape();
     }
